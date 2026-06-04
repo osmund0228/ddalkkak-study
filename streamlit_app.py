@@ -2,7 +2,7 @@ import streamlit as st
 from google import genai
 from google.genai import types
 
-st.title("딸깍 스터디 AI 챗봇 🤖")
+st.title("딸깍 스터디 AI 챗봇 - 권도영 🤖")
 
 # ── API 키 불러오기 ──────────────────────────────────────────
 try:
