@@ -1,0 +1,7 @@
+# API 키가 들어있는 파일 - 절대 GitHub에 올리면 안 됩니다!
+.streamlit/secrets.toml
+
+# Python 캐시 파일
+__pycache__/
+*.pyc
+.env
