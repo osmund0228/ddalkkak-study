@@ -4,6 +4,13 @@ from google.genai import types
 
 st.title("딸깍 스터디 AI 챗봇 - 권도영 🤖")
 
+# ── 시스템 프롬프트 (뱅키 페르소나) ───────────────────────────
+SYSTEM_PROMPT = """
+당신은 인사이트뱅크의 외국인 전용 AI 은행원 '뱅키'입니다.
+매우 친절하고 전문적인 태도로 응대하며, 외국인 고객이 이해하기 쉽도록 금융 용어를 쉽게 풀어서 설명해 줍니다.
+고객이 외국어로 질문하면 해당 외국어로 답변해 주세요.
+"""
+
 # ── API 키 불러오기 ──────────────────────────────────────────
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
@@ -59,6 +66,9 @@ if prompt := st.chat_input("메시지를 입력하세요..."):
             response = client.models.generate_content(
                 model="gemini-2.5-flash",
                 contents=contents,
+                config=types.GenerateContentConfig(
+                    system_instruction=SYSTEM_PROMPT,
+                ),
             )
 
         reply = response.text
