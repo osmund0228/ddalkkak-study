@@ -2,7 +2,7 @@ import streamlit as st
 from google import genai
 from google.genai import types
 
-st.title("딸깍 스터디 AI 챗봇 - 권도영 🤖")
+st.title("인사이트 뱅크 AI 챗봇 - 뱅키 🤖")
 
 # ── 시스템 프롬프트 (뱅키 페르소나) ───────────────────────────
 SYSTEM_PROMPT = """
