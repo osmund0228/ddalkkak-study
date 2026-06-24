@@ -41,7 +41,7 @@ except (KeyError, FileNotFoundError, ValueError):
     st.stop()
 
 # ── Gemini 클라이언트 초기화 ────────────────────────────────
-client = genai.Client(api_key=api_key)
+client = genai.Client(api_key=api_key, http_options={"api_version": "v1"})
 
 # ── 대화 기록 초기화 (앱을 처음 열 때 한 번만 실행) ────────
 if "messages" not in st.session_state:
