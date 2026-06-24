@@ -72,7 +72,7 @@ if prompt := st.chat_input("메시지를 입력하세요..."):
             ]
 
             response = client.models.generate_content(
-                model="gemini-2.5-flash",
+                model="gemini-3.1-flash-lite",
                 contents=contents,
                 config=types.GenerateContentConfig(
                     system_instruction=SYSTEM_PROMPT,
