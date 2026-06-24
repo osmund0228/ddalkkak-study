@@ -41,7 +41,7 @@ except (KeyError, FileNotFoundError, ValueError):
     st.stop()
 
 # ── Gemini 클라이언트 초기화 ────────────────────────────────
-client = genai.Client(api_key=api_key, http_options={"api_version": "v1"})
+client = genai.Client(api_key=api_key)
 
 # ── 대화 기록 초기화 (앱을 처음 열 때 한 번만 실행) ────────
 if "messages" not in st.session_state:
@@ -63,12 +63,7 @@ if prompt := st.chat_input("메시지를 입력하세요..."):
     # AI 응답 받기
     with st.chat_message("assistant"):
         with st.spinner("생각 중..."):
-            # v1 API는 system_instruction 미지원 → 첫 턴에 역할 지침 삽입
-            system_turn = [
-                types.Content(role="user", parts=[types.Part(text=SYSTEM_PROMPT + "\n\n위 지침을 완전히 이해했으면 '네'라고만 답하세요.")]),
-                types.Content(role="model", parts=[types.Part(text="네.")]),
-            ]
-            conversation = [
+            contents = [
                 types.Content(
                     role="user" if msg["role"] == "user" else "model",
                     parts=[types.Part(text=msg["content"])]
@@ -76,16 +71,15 @@ if prompt := st.chat_input("메시지를 입력하세요..."):
                 for msg in st.session_state.messages
             ]
 
-            try:
-                response = client.models.generate_content(
-                    model="gemini-1.5-flash",
-                    contents=system_turn + conversation,
-                )
-                reply = response.text
-            except Exception as e:
-                st.error(f"❌ 실제 오류 내용: {e}")
-                st.stop()
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=contents,
+                config=types.GenerateContentConfig(
+                    system_instruction=SYSTEM_PROMPT,
+                ),
+            )
 
+        reply = response.text
         st.markdown(reply)
 
     # AI 응답도 대화 기록에 저장
