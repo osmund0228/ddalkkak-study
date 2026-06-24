@@ -63,8 +63,12 @@ if prompt := st.chat_input("메시지를 입력하세요..."):
     # AI 응답 받기
     with st.chat_message("assistant"):
         with st.spinner("생각 중..."):
-            # 대화 기록 전체를 Gemini가 이해하는 형식으로 변환
-            contents = [
+            # v1 API는 system_instruction 미지원 → 첫 턴에 역할 지침 삽입
+            system_turn = [
+                types.Content(role="user", parts=[types.Part(text=SYSTEM_PROMPT + "\n\n위 지침을 완전히 이해했으면 '네'라고만 답하세요.")]),
+                types.Content(role="model", parts=[types.Part(text="네.")]),
+            ]
+            conversation = [
                 types.Content(
                     role="user" if msg["role"] == "user" else "model",
                     parts=[types.Part(text=msg["content"])]
@@ -75,10 +79,7 @@ if prompt := st.chat_input("메시지를 입력하세요..."):
             try:
                 response = client.models.generate_content(
                     model="gemini-1.5-flash",
-                    contents=contents,
-                    config=types.GenerateContentConfig(
-                        system_instruction=SYSTEM_PROMPT,
-                    ),
+                    contents=system_turn + conversation,
                 )
                 reply = response.text
             except Exception as e:
