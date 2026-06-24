@@ -72,15 +72,19 @@ if prompt := st.chat_input("메시지를 입력하세요..."):
                 for msg in st.session_state.messages
             ]
 
-            response = client.models.generate_content(
-                model="gemini-2.0-flash",
-                contents=contents,
-                config=types.GenerateContentConfig(
-                    system_instruction=SYSTEM_PROMPT,
-                ),
-            )
+            try:
+                response = client.models.generate_content(
+                    model="gemini-2.0-flash",
+                    contents=contents,
+                    config=types.GenerateContentConfig(
+                        system_instruction=SYSTEM_PROMPT,
+                    ),
+                )
+                reply = response.text
+            except Exception as e:
+                st.error(f"❌ 실제 오류 내용: {e}")
+                st.stop()
 
-        reply = response.text
         st.markdown(reply)
 
     # AI 응답도 대화 기록에 저장
